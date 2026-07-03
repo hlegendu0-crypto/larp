@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { usePlayer } from '../store.jsx'
 import { Button, OnlineCounter, PageShell, RankBadge } from '../components/ui.jsx'
 import { pickOpponent } from '../data/mock.js'
+import { connectSignaling, setActiveSocket } from '../lib/net.js'
+import { ROUND_SEC } from '../lib/config.js'
 
 export default function Lobby() {
   const { player } = usePlayer()
@@ -10,30 +12,83 @@ export default function Lobby() {
   const [mode, setMode] = useState(null) // null | 'queue' | 'friend'
   const [waitSec, setWaitSec] = useState(0)
   const [copied, setCopied] = useState(false)
-  const inviteLink = useRef(
-    `https://larpbattle.app/i/${Math.random().toString(36).slice(2, 10)}`,
-  )
+  const [demo, setDemo] = useState(false) // сервер недоступен — режим симуляции
+  const [inviteCode, setInviteCode] = useState(null)
+  const socketRef = useRef(null)
 
-  // Симуляция очереди: подбор через 3–7 сек (этап 1)
+  useEffect(() => () => socketRef.current?.close(), [])
+
+  const goLive = (socket, msg) => {
+    socketRef.current = null // сокет переезжает в баттл
+    setActiveSocket(socket)
+    navigate('/battle', {
+      state: { live: true, opponent: msg.opponent, friendly: msg.friendly, polite: msg.polite },
+    })
+  }
+
+  // Быстрый матч: реальная очередь через сервер, при недоступности — демо этапа 1
   useEffect(() => {
     if (mode !== 'queue') return
     setWaitSec(0)
+    setDemo(false)
     const tick = setInterval(() => setWaitSec((s) => s + 1), 1000)
-    const matchIn = 3000 + Math.random() * 4000
-    const match = setTimeout(() => {
-      navigate('/battle', { state: { opponent: pickOpponent(player.elo) } })
-    }, matchIn)
-    return () => {
-      clearInterval(tick)
-      clearTimeout(match)
-    }
-  }, [mode, navigate, player.elo])
+    let demoTimer = null
+    let cancelled = false
 
-  const eloRange = 150 + Math.floor(waitSec / 10) * 50 // диапазон расширяется со временем (ТЗ §6.4)
+    connectSignaling({ nick: player.nick, elo: player.elo })
+      .then((socket) => {
+        if (cancelled) return socket.close()
+        socketRef.current = socket
+        socket.on('match_found', (msg) => goLive(socket, msg))
+        socket.onClose(() => !cancelled && setMode(null))
+        socket.send('find_match')
+      })
+      .catch(() => {
+        if (cancelled) return
+        setDemo(true)
+        demoTimer = setTimeout(
+          () => navigate('/battle', { state: { opponent: pickOpponent(player.elo) } }),
+          3000 + Math.random() * 3000,
+        )
+      })
+
+    return () => {
+      cancelled = true
+      clearInterval(tick)
+      clearTimeout(demoTimer)
+      if (socketRef.current) {
+        socketRef.current.send('cancel_find')
+        socketRef.current.close()
+        socketRef.current = null
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode])
+
+  // Вызов друга: реальная комната с кодом, при недоступности сервера — демо
+  const createRoom = async () => {
+    setMode('friend')
+    setInviteCode(null)
+    setDemo(false)
+    try {
+      const socket = await connectSignaling({ nick: player.nick, elo: player.elo })
+      socketRef.current = socket
+      socket.on('room_created', (msg) => setInviteCode(msg.code))
+      socket.on('match_found', (msg) => goLive(socket, msg))
+      socket.send('create_room')
+    } catch {
+      setDemo(true)
+    }
+  }
+
+  const eloRange = 150 + Math.floor(waitSec / 10) * 100 // расширение окна (ТЗ §6.4)
+  const inviteLink = inviteCode
+    ? `${location.origin}${location.pathname}#/join/${inviteCode}`
+    : null
 
   const copyInvite = async () => {
     try {
-      await navigator.clipboard.writeText(inviteLink.current)
+      await navigator.clipboard.writeText(inviteLink)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -64,6 +119,11 @@ export default function Lobby() {
             <p className="text-sm text-muted">
               Диапазон ELO: ±{eloRange} · В очереди {waitSec} c
             </p>
+            {demo && (
+              <p className="mt-2 text-xs text-muted">
+                Сервер матчмейкинга недоступен — будет демо-баттл с симуляцией.
+              </p>
+            )}
             <div className="mt-2 h-1 max-w-56 mx-auto rounded-full overflow-hidden bg-graphite">
               <div className="h-full shimmer" />
             </div>
@@ -82,46 +142,56 @@ export default function Lobby() {
                 Быстрый матч
               </div>
               <p className="mt-3 text-sm text-muted leading-relaxed">
-                Соперник вашего уровня (ELO ±150). Раунд 60 секунд, на кону рейтинг.
+                Соперник вашего уровня (ELO ±150). Раунд {ROUND_SEC} секунд, на кону рейтинг.
               </p>
             </button>
 
-            <div
-              className={`panel p-8 text-left transition-colors ${mode === 'friend' ? 'border-accent/40' : ''}`}
-            >
+            <div className={`panel p-8 text-left transition-colors ${mode === 'friend' ? 'border-accent/40' : ''}`}>
               <div className="text-xs uppercase tracking-[0.25em] text-muted mb-3">Приватный</div>
               <div className="font-display text-2xl">Вызов друга</div>
               {mode === 'friend' ? (
-                <div className="mt-4 space-y-3">
-                  <input
-                    readOnly
-                    value={inviteLink.current}
-                    className="w-full rounded-lg bg-graphite border border-line px-3 py-2 text-xs text-cream/80"
-                    onFocus={(e) => e.target.select()}
-                  />
-                  <div className="flex gap-2">
-                    <Button variant="ghost" className="flex-1 !py-2 text-xs" onClick={copyInvite}>
-                      {copied ? 'Скопировано' : 'Копировать ссылку'}
-                    </Button>
+                demo ? (
+                  <div className="mt-4 space-y-3">
+                    <p className="text-sm text-muted">
+                      Сервер недоступен — реальная комната не создана. Можно сыграть демо-баттл
+                      с симуляцией соперника.
+                    </p>
                     <Button
-                      className="flex-1 !py-2 text-xs"
+                      className="!py-2 text-xs"
                       onClick={() =>
                         navigate('/battle', { state: { opponent: pickOpponent(player.elo), friendly: true } })
                       }
                     >
-                      Друг зашёл (демо)
+                      Демо-баттл
                     </Button>
                   </div>
-                  <p className="text-[11px] text-muted">
-                    Этап 1: комната симулируется. Реальные приватные комнаты — этап 3.
-                  </p>
-                </div>
+                ) : !inviteCode ? (
+                  <p className="mt-4 text-sm text-muted pulse-soft">Создаём комнату…</p>
+                ) : (
+                  <div className="mt-4 space-y-3">
+                    <input
+                      readOnly
+                      value={inviteLink}
+                      className="w-full rounded-lg bg-graphite border border-line px-3 py-2 text-xs text-cream/80"
+                      onFocus={(e) => e.target.select()}
+                    />
+                    <div className="flex items-center gap-3">
+                      <Button variant="ghost" className="flex-1 !py-2 text-xs" onClick={copyInvite}>
+                        {copied ? 'Скопировано' : 'Копировать ссылку'}
+                      </Button>
+                      <span className="font-display text-lg tracking-[0.2em] text-accent-soft">{inviteCode}</span>
+                    </div>
+                    <p className="text-[11px] text-muted pulse-soft">
+                      Ждём соперника — баттл начнётся, как только друг откроет ссылку.
+                    </p>
+                  </div>
+                )
               ) : (
                 <>
                   <p className="mt-3 text-sm text-muted leading-relaxed">
-                    Сгенерируйте инвайт-ссылку и позовите соперника в приватную комнату.
+                    Сгенерируйте инвайт-ссылку и позовите соперника в приватную комнату. Без рейтинга.
                   </p>
-                  <Button variant="ghost" className="mt-4 !py-2 text-xs" onClick={() => setMode('friend')}>
+                  <Button variant="ghost" className="mt-4 !py-2 text-xs" onClick={createRoom}>
                     Создать комнату
                   </Button>
                 </>

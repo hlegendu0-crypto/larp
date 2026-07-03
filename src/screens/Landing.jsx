@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { usePlayer } from '../store.jsx'
 import { Button, OnlineCounter, RankBadge } from '../components/ui.jsx'
 import { LEADERBOARD } from '../data/mock.js'
+import { ROUND_SEC } from '../lib/config.js'
 
 const STEPS = [
   {
@@ -36,7 +37,7 @@ export default function Landing() {
             Твои вещи <span className="accent-text">говорят за тебя</span>
           </h1>
           <p className="fade-up mx-auto mt-6 max-w-xl text-muted text-lg" style={{ animationDelay: '0.16s' }}>
-            Live 1v1 видео-баттлы. 60 секунд. AI оценивает всё, что ты покажешь.
+            Live 1v1 видео-баттлы. {ROUND_SEC} секунд. AI оценивает всё, что ты покажешь.
             Побеждает больший Flex Score.
           </p>
           <div className="fade-up mt-10 flex items-center justify-center gap-4" style={{ animationDelay: '0.24s' }}>

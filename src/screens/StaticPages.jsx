@@ -1,4 +1,5 @@
 import { PageShell } from '../components/ui.jsx'
+import { ROUND_SEC } from '../lib/config.js'
 
 function Doc({ title, children }) {
   return (
@@ -19,7 +20,7 @@ export function RulesPage() {
       <section>
         <h2>Формат</h2>
         <p>
-          Баттл — live 1v1 раунд длительностью 60 секунд. Оба игрока одновременно показывают в камеру
+          Баттл — live 1v1 раунд длительностью {ROUND_SEC} секунд. Оба игрока одновременно показывают в камеру
           свои вещи. AI распознаёт предметы и оценивает их рыночную стоимость. Побеждает игрок с большим
           суммарным Flex Score.
         </p>

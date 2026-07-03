@@ -5,12 +5,12 @@ import { FrameCapture } from '../lib/capture.js'
 import { analyzeFrame, getAiConfig } from '../lib/vision.js'
 import { fmtUsd } from '../lib/elo.js'
 import { REJECT_REASONS } from '../data/mock.js'
+import { ROUND_SEC, MAX_FRAMES_PER_ROUND } from '../lib/config.js'
 
 // Этап 2 (ТЗ §10): режим «оцени мой флекс» — реальный AI-пайплайн §7.1–7.3
 // на своей камере, без соперника и без рейтинга.
 
-const ROUND_SEC = 60
-const MAX_FRAMES = 15 // лимит кадров на раунд — контроль стоимости (ТЗ §11)
+const MAX_FRAMES = MAX_FRAMES_PER_ROUND // лимит кадров на раунд — контроль стоимости (ТЗ §11)
 const MAX_STRIKES = 3
 
 const normalizeName = (s) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()
@@ -210,7 +210,7 @@ export default function Solo() {
             {phase === 'idle' && !camError && (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-ink/60 gap-4">
                 <p className="text-sm text-muted max-w-xs text-center">
-                  60 секунд. Держите предмет в кадре ~1 секунду, чтобы AI его зафиксировал.
+                  {ROUND_SEC} секунд. Держите предмет в кадре ~1 секунду, чтобы AI его зафиксировал.
                 </p>
                 <Button onClick={start}>Начать раунд</Button>
               </div>

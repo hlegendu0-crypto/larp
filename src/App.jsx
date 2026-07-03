@@ -7,6 +7,7 @@ import CameraCheck from './screens/CameraCheck.jsx'
 import Lobby from './screens/Lobby.jsx'
 import Battle from './screens/Battle.jsx'
 import Solo from './screens/Solo.jsx'
+import JoinRoom from './screens/JoinRoom.jsx'
 import Results from './screens/Results.jsx'
 import Leaderboard from './screens/Leaderboard.jsx'
 import Profile from './screens/Profile.jsx'
@@ -122,6 +123,7 @@ export default function App() {
           <Route path="/lobby" element={<RequireAuth><Lobby /></RequireAuth>} />
           <Route path="/battle" element={<RequireAuth><Battle /></RequireAuth>} />
           <Route path="/solo" element={<RequireAuth><Solo /></RequireAuth>} />
+          <Route path="/join/:code" element={<RequireAuth><JoinRoom /></RequireAuth>} />
           <Route path="/results" element={<RequireAuth><Results /></RequireAuth>} />
           <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
           <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />

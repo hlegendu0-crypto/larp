@@ -1,34 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { usePlayer } from '../store.jsx'
-import { Button, ItemCard, RankBadge } from '../components/ui.jsx'
+import { AnimatedScore, Button, ItemCard, RankBadge } from '../components/ui.jsx'
 import { CameraView, FakeOpponentVideo } from '../components/CameraView.jsx'
 import { generateBattleScript, REJECT_REASONS, pickOpponent } from '../data/mock.js'
-import { fmtUsd } from '../lib/elo.js'
-
-const ROUND_SEC = 60 // длительность раунда — параметр (ТЗ §3)
-
-function AnimatedScore({ value, className = '' }) {
-  const [shown, setShown] = useState(value)
-  const raf = useRef()
-  useEffect(() => {
-    const from = shown
-    const start = performance.now()
-    const dur = 700
-    const step = (now) => {
-      const p = Math.min(1, (now - start) / dur)
-      const eased = 1 - Math.pow(1 - p, 3)
-      setShown(from + (value - from) * eased)
-      if (p < 1) raf.current = requestAnimationFrame(step)
-    }
-    raf.current = requestAnimationFrame(step)
-    return () => cancelAnimationFrame(raf.current)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value])
-  return <span className={`font-display ${className}`}>${Math.round(shown).toLocaleString('en-US')}</span>
-}
+import { ROUND_SEC } from '../lib/config.js'
+import LiveBattle from './LiveBattle.jsx'
 
 export default function Battle() {
+  const { state } = useLocation()
+  // Этап 3: реальный матч через сервер; без него — демо-симуляция этапа 1
+  if (state?.live) return <LiveBattle />
+  return <SimBattle />
+}
+
+function SimBattle() {
   const { player } = usePlayer()
   const navigate = useNavigate()
   const location = useLocation()

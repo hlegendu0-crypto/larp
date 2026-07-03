@@ -1,7 +1,29 @@
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { rankFor, fmtUsd } from '../lib/elo.js'
 import { CATEGORY_LABELS } from '../data/mock.js'
+
+export function AnimatedScore({ value, className = '' }) {
+  const [shown, setShown] = useState(value)
+  const shownRef = useRef(value)
+  const raf = useRef()
+  useEffect(() => {
+    const from = shownRef.current
+    const start = performance.now()
+    const dur = 700
+    const step = (now) => {
+      const p = Math.min(1, (now - start) / dur)
+      const eased = 1 - Math.pow(1 - p, 3)
+      const v = from + (value - from) * eased
+      shownRef.current = v
+      setShown(v)
+      if (p < 1) raf.current = requestAnimationFrame(step)
+    }
+    raf.current = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf.current)
+  }, [value])
+  return <span className={`font-display ${className}`}>${Math.round(shown).toLocaleString('en-US')}</span>
+}
 
 export function Logo({ className = '' }) {
   return (

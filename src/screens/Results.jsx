@@ -13,8 +13,9 @@ export default function Results() {
 
   const result = useMemo(() => {
     if (!state) return null
-    const won = state.surrendered ? false : state.myScore > state.oppScore
-    const draw = !state.surrendered && state.myScore === state.oppScore
+    // Live-матч (этап 3): исход определяет сервер, включая технические победы
+    const won = state.outcome ? state.outcome === 'win' : state.surrendered ? false : state.myScore > state.oppScore
+    const draw = state.outcome ? state.outcome === 'draw' : !state.surrendered && state.myScore === state.oppScore
     const delta = state.friendly
       ? 0
       : eloDelta(player.elo, state.opponent.elo, draw ? 0.5 : won ? 1 : 0, {

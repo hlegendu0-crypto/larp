@@ -103,8 +103,11 @@ export function generateBattleScript(durationSec = 60) {
       t += rnd(5, 11)
     }
   }
-  // 1–2 челленджа за раунд, только для своего игрока (ТЗ §7.4)
-  const challengeTimes = Math.random() < 0.5 ? [rnd(18, 26)] : [rnd(14, 20), rnd(38, 46)]
+  // 1–2 челленджа за раунд, только для своего игрока (ТЗ §7.4); тайминги — доли раунда
+  const challengeTimes =
+    Math.random() < 0.5
+      ? [rnd(0.3, 0.45) * durationSec]
+      : [rnd(0.25, 0.35) * durationSec, rnd(0.6, 0.8) * durationSec]
   for (const ct of challengeTimes) {
     events.push({ t: Math.round(ct * 10) / 10, kind: 'challenge', text: pick(CHALLENGES) })
   }
