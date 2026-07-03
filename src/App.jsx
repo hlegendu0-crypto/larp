@@ -31,7 +31,7 @@ function Header() {
               key={n.to}
               to={n.to}
               className={({ isActive }) =>
-                `tracking-wide transition-colors ${isActive ? 'text-champagne' : 'text-muted hover:text-cream'}`
+                `tracking-wide transition-colors ${isActive ? 'text-accent-soft' : 'text-muted hover:text-cream'}`
               }
             >
               {n.label}
@@ -42,17 +42,17 @@ function Header() {
           {player ? (
             <Link to="/profile" className="flex items-center gap-3 group">
               <span className="hidden sm:block text-right">
-                <span className="block text-sm font-semibold group-hover:text-champagne transition-colors">
+                <span className="block text-sm font-semibold group-hover:text-accent-soft transition-colors">
                   {player.nick}
                 </span>
                 <span className="block text-[11px] text-muted font-display">{player.elo} ELO</span>
               </span>
-              <span className="w-9 h-9 rounded-full hairline flex items-center justify-center font-display text-champagne">
+              <span className="w-9 h-9 rounded-full hairline flex items-center justify-center font-display text-accent-soft">
                 {player.nick[0]?.toUpperCase()}
               </span>
             </Link>
           ) : (
-            <Link to="/login" className="text-sm text-muted hover:text-champagne transition-colors">
+            <Link to="/login" className="text-sm text-muted hover:text-accent-soft transition-colors">
               Войти
             </Link>
           )}
@@ -65,7 +65,7 @@ function Header() {
               <NavLink
                 key={n.to}
                 to={n.to}
-                className={({ isActive }) => (isActive ? 'text-champagne' : 'text-muted')}
+                className={({ isActive }) => (isActive ? 'text-accent-soft' : 'text-muted')}
               >
                 {n.label}
               </NavLink>
@@ -86,10 +86,10 @@ function Footer() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted">
         <Logo className="text-base" />
         <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-          <Link to="/rules" className="hover:text-champagne transition-colors">Правила</Link>
-          <Link to="/terms" className="hover:text-champagne transition-colors">Условия использования</Link>
-          <Link to="/privacy" className="hover:text-champagne transition-colors">Конфиденциальность</Link>
-          <span className="hairline rounded-full px-2 py-0.5 text-champagne/80">18+</span>
+          <Link to="/rules" className="hover:text-accent-soft transition-colors">Правила</Link>
+          <Link to="/terms" className="hover:text-accent-soft transition-colors">Условия использования</Link>
+          <Link to="/privacy" className="hover:text-accent-soft transition-colors">Конфиденциальность</Link>
+          <span className="hairline rounded-full px-2 py-0.5 text-accent-soft/80">18+</span>
         </nav>
         <span>© 2026 LarpBattle. Оценки формирует AI и они не являются экспертизой.</span>
       </div>

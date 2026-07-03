@@ -6,18 +6,18 @@ import { CATEGORY_LABELS } from '../data/mock.js'
 export function Logo({ className = '' }) {
   return (
     <span className={`font-display font-semibold tracking-wide ${className}`}>
-      <span className="gold-text">Larp</span>
+      <span className="accent-text">Larp</span>
       <span className="text-cream">Battle</span>
     </span>
   )
 }
 
-export function Button({ variant = 'gold', className = '', as, to, ...props }) {
+export function Button({ variant = 'accent', className = '', as, to, ...props }) {
   const base =
     'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold tracking-wide transition-all duration-300 cursor-pointer select-none disabled:opacity-40 disabled:cursor-not-allowed'
   const styles = {
-    gold: 'bg-gradient-to-b from-champagne to-gold text-ink hover:brightness-110 shadow-[0_0_30px_rgba(212,180,106,0.15)]',
-    ghost: 'border border-line text-cream hover:border-gold/50 hover:text-champagne',
+    accent: 'bg-gradient-to-b from-accent-soft to-accent text-ink hover:brightness-110 shadow-[0_0_30px_rgba(212,180,106,0.15)]',
+    ghost: 'border border-line text-cream hover:border-accent/50 hover:text-accent-soft',
     danger: 'border border-danger/50 text-danger hover:bg-danger/10',
   }
   const cls = `${base} ${styles[variant]} ${className}`
@@ -30,7 +30,7 @@ export function RankBadge({ elo, size = 'md' }) {
   const sizes = { sm: 'text-[10px] px-2 py-0.5', md: 'text-xs px-3 py-1' }
   return (
     <span
-      className={`inline-flex items-center rounded-full hairline uppercase tracking-[0.18em] text-champagne/90 ${sizes[size]}`}
+      className={`inline-flex items-center rounded-full hairline uppercase tracking-[0.18em] text-accent-soft/90 ${sizes[size]}`}
     >
       {rank.name}
     </span>
@@ -38,7 +38,7 @@ export function RankBadge({ elo, size = 'md' }) {
 }
 
 export function CategoryIcon({ category, className = 'w-4 h-4' }) {
-  const c = 'stroke-gold fill-none stroke-[1.5]'
+  const c = 'stroke-accent fill-none stroke-[1.5]'
   const icons = {
     watch: (
       <svg viewBox="0 0 24 24" className={className}>
@@ -94,7 +94,7 @@ export function ItemCard({ event }) {
       </div>
       <div className="text-right shrink-0">
         {counted ? (
-          <div className="font-display text-champagne">{fmtUsd(item.price)}</div>
+          <div className="font-display text-accent-soft">{fmtUsd(item.price)}</div>
         ) : (
           <div className="text-[11px] text-danger max-w-28 leading-tight">{event.reason}</div>
         )}

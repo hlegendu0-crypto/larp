@@ -33,7 +33,7 @@ export default function Settings() {
   const Select = ({ label, items }) => (
     <label className="block">
       <span className="text-xs uppercase tracking-[0.2em] text-muted">{label}</span>
-      <select className="mt-2 w-full rounded-lg bg-graphite border border-line px-4 py-3 text-cream focus:outline-none focus:border-gold/60">
+      <select className="mt-2 w-full rounded-lg bg-graphite border border-line px-4 py-3 text-cream focus:outline-none focus:border-accent/60">
         {items.length === 0 && <option>По умолчанию</option>}
         {items.map((d, i) => (
           <option key={d.deviceId || i}>{d.label || `Устройство ${i + 1}`}</option>
@@ -55,7 +55,7 @@ export default function Settings() {
               value={nick}
               onChange={(e) => setNick(e.target.value)}
               maxLength={20}
-              className="mt-2 w-full rounded-lg bg-graphite border border-line px-4 py-3 text-cream focus:outline-none focus:border-gold/60"
+              className="mt-2 w-full rounded-lg bg-graphite border border-line px-4 py-3 text-cream focus:outline-none focus:border-accent/60"
             />
           </label>
           <Button onClick={save} disabled={nick.trim().length < 3} className="!py-2 text-xs">

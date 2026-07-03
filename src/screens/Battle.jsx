@@ -166,13 +166,13 @@ export default function Battle() {
               <div className="text-right fade-up">
                 <div className="font-display text-2xl sm:text-4xl">{player.nick}</div>
                 <div className="mt-2 flex justify-end"><RankBadge elo={player.elo} /></div>
-                <div className="mt-1 font-display text-champagne">{player.elo} ELO</div>
+                <div className="mt-1 font-display text-accent-soft">{player.elo} ELO</div>
               </div>
-              <div className="vs-slam font-display text-5xl sm:text-7xl gold-text font-bold">VS</div>
+              <div className="vs-slam font-display text-5xl sm:text-7xl accent-text font-bold">VS</div>
               <div className="text-left fade-up" style={{ animationDelay: '0.15s' }}>
                 <div className="font-display text-2xl sm:text-4xl">{opponent.nick}</div>
                 <div className="mt-2"><RankBadge elo={opponent.elo} /></div>
-                <div className="mt-1 font-display text-champagne">{opponent.elo} ELO</div>
+                <div className="mt-1 font-display text-accent-soft">{opponent.elo} ELO</div>
               </div>
             </div>
             {friendly && (
@@ -182,7 +182,7 @@ export default function Battle() {
             )}
           </div>
         ) : (
-          <div key={count} className="count-pop font-display text-[10rem] leading-none gold-text font-bold">
+          <div key={count} className="count-pop font-display text-[10rem] leading-none accent-text font-bold">
             {count || 'GO'}
           </div>
         )}
@@ -194,7 +194,7 @@ export default function Battle() {
   if (phase === 'counting') {
     return (
       <div className="fixed inset-0 bg-ink flex flex-col items-center justify-center gap-6">
-        <div className="w-16 h-16 rounded-full border-2 border-gold/30 border-t-gold animate-spin" />
+        <div className="w-16 h-16 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
         <div className="font-display text-3xl">Идёт подсчёт…</div>
         <p className="text-sm text-muted">Финализируем анализ айтемов</p>
       </div>
@@ -222,7 +222,7 @@ export default function Battle() {
           <div className="flex items-center justify-between gap-4">
             <div className="min-w-0">
               <div className="truncate text-xs uppercase tracking-[0.2em] text-muted">{player.nick}</div>
-              <AnimatedScore value={myScore} className="text-xl sm:text-3xl text-champagne" />
+              <AnimatedScore value={myScore} className="text-xl sm:text-3xl text-accent-soft" />
             </div>
             <div className="text-center shrink-0">
               <div className={`font-display text-2xl sm:text-3xl ${timeLeft <= 10 ? 'text-danger' : ''}`}>
@@ -237,7 +237,7 @@ export default function Battle() {
           {/* Перетягивание лидерства */}
           <div className="mt-3 h-1.5 rounded-full bg-graphite overflow-hidden flex">
             <div
-              className="h-full bg-gradient-to-r from-gold to-champagne transition-all duration-700"
+              className="h-full bg-gradient-to-r from-accent to-accent-soft transition-all duration-700"
               style={{ width: `${myShare * 100}%` }}
             />
           </div>
@@ -251,21 +251,21 @@ export default function Battle() {
       <div className="flex-1 min-h-0 mx-auto w-full max-w-5xl px-4 sm:px-6 py-4 grid md:grid-cols-[1.6fr_1fr] gap-4">
         <div className="relative panel overflow-hidden min-h-56">
           {BigView}
-          <span className="absolute top-3 left-3 text-[10px] uppercase tracking-[0.25em] bg-ink/70 rounded-full px-3 py-1 text-champagne">
+          <span className="absolute top-3 left-3 text-[10px] uppercase tracking-[0.25em] bg-ink/70 rounded-full px-3 py-1 text-accent-soft">
             {bigLabel}
           </span>
           {/* PiP */}
           <button
             onClick={() => setSwap((s) => !s)}
             title="Поменять потоки местами"
-            className="absolute bottom-3 right-3 w-32 sm:w-40 aspect-video rounded-lg overflow-hidden border border-gold/30 shadow-lg cursor-pointer hover:border-gold transition-colors"
+            className="absolute bottom-3 right-3 w-32 sm:w-40 aspect-video rounded-lg overflow-hidden border border-accent/30 shadow-lg cursor-pointer hover:border-accent transition-colors"
           >
             {PipView}
           </button>
           {/* Челлендж-оверлей */}
           {challenge && (
             <div className="absolute inset-0 bg-ink/85 flex flex-col items-center justify-center p-6 text-center">
-              <div className="text-xs uppercase tracking-[0.3em] text-gold mb-4">Челлендж · {challenge.left}с</div>
+              <div className="text-xs uppercase tracking-[0.3em] text-accent mb-4">Челлендж · {challenge.left}с</div>
               <div className="font-display text-2xl max-w-sm">{challenge.text}</div>
               <Button
                 className="mt-6"
@@ -294,7 +294,7 @@ export default function Battle() {
               .filter((e) => e.kind === 'item')
               .map((e) => (
                 <div key={e.id} className="relative">
-                  <div className={`absolute -left-0.5 top-0 bottom-0 w-0.5 rounded ${e.player === 'me' ? 'bg-gold' : 'bg-line'}`} />
+                  <div className={`absolute -left-0.5 top-0 bottom-0 w-0.5 rounded ${e.player === 'me' ? 'bg-accent' : 'bg-line'}`} />
                   <ItemCard event={e.voided ? { ...e, flag: 'voided' } : e} />
                 </div>
               ))}

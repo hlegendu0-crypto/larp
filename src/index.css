@@ -5,8 +5,8 @@
   --color-graphite: #131318;
   --color-panel: #17171d;
   --color-line: #26262e;
-  --color-gold: #d4b46a;
-  --color-champagne: #efe1bc;
+  --color-accent: #a78bfa;
+  --color-accent-soft: #e4d9fb;
   --color-muted: #8a8a94;
   --color-cream: #ece8dd;
   --color-danger: #b3564f;
@@ -24,15 +24,15 @@ body {
   font-family: var(--font-sans);
   color: var(--color-cream);
   background:
-    radial-gradient(1200px 600px at 70% -10%, rgba(212, 180, 106, 0.06), transparent 60%),
-    radial-gradient(900px 500px at 10% 110%, rgba(212, 180, 106, 0.04), transparent 55%),
+    radial-gradient(1200px 600px at 70% -10%, rgba(167, 139, 250, 0.06), transparent 60%),
+    radial-gradient(900px 500px at 10% 110%, rgba(167, 139, 250, 0.04), transparent 55%),
     var(--color-ink);
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(212, 180, 106, 0.35);
+  background: rgba(167, 139, 250, 0.35);
 }
 
 .font-display {
@@ -40,15 +40,15 @@ body {
   font-variant-numeric: lining-nums tabular-nums;
 }
 
-.gold-text {
-  background: linear-gradient(120deg, #b99753 0%, #efe1bc 45%, #d4b46a 70%, #a98c4e 100%);
+.accent-text {
+  background: linear-gradient(120deg, #8b5cf6 0%, #e4d9fb 45%, #a78bfa 70%, #7c5ed1 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .hairline {
-  border: 1px solid rgba(212, 180, 106, 0.18);
+  border: 1px solid rgba(167, 139, 250, 0.18);
 }
 
 .panel {
@@ -95,7 +95,7 @@ body {
   100% { background-position: 200% 0; }
 }
 .shimmer {
-  background: linear-gradient(90deg, rgba(212,180,106,0) 0%, rgba(212,180,106,0.25) 50%, rgba(212,180,106,0) 100%);
+  background: linear-gradient(90deg, rgba(167,139,250,0) 0%, rgba(167,139,250,0.25) 50%, rgba(167,139,250,0) 100%);
   background-size: 200% 100%;
   animation: shimmer 2.4s linear infinite;
 }

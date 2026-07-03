@@ -49,7 +49,7 @@ export default function CameraCheck() {
           <div className="panel overflow-hidden aspect-video relative">
             <CameraView className="w-full h-full" onStatus={onStatus} />
             {camStatus === 'ok' && (
-              <span className="absolute top-3 left-3 text-[10px] uppercase tracking-[0.25em] bg-ink/70 rounded-full px-3 py-1 text-champagne">
+              <span className="absolute top-3 left-3 text-[10px] uppercase tracking-[0.25em] bg-ink/70 rounded-full px-3 py-1 text-accent-soft">
                 Превью
               </span>
             )}
@@ -66,7 +66,7 @@ export default function CameraCheck() {
               <ul className="space-y-2 text-sm text-cream/80">
                 {HINTS.map((h) => (
                   <li key={h} className="flex gap-2">
-                    <span className="text-gold">·</span>
+                    <span className="text-accent">·</span>
                     {h}
                   </li>
                 ))}

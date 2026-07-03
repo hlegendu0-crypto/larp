@@ -21,7 +21,7 @@ export default function Profile() {
     <PageShell>
       <div className="fade-up pt-4">
         <div className="flex items-center gap-5 mb-8">
-          <div className="w-20 h-20 rounded-full hairline flex items-center justify-center font-display text-4xl text-champagne">
+          <div className="w-20 h-20 rounded-full hairline flex items-center justify-center font-display text-4xl text-accent-soft">
             {player.nick[0]?.toUpperCase()}
           </div>
           <div className="flex-1">
@@ -41,7 +41,7 @@ export default function Profile() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {stats.map(([label, value]) => (
             <div key={label} className="panel p-5 text-center">
-              <div className="font-display text-2xl text-champagne">{value}</div>
+              <div className="font-display text-2xl text-accent-soft">{value}</div>
               <div className="mt-1 text-[11px] uppercase tracking-[0.2em] text-muted">{label}</div>
             </div>
           ))}
@@ -52,7 +52,7 @@ export default function Profile() {
           {player.bestItem ? (
             <div className="flex items-baseline justify-between">
               <div className="font-semibold">{player.bestItem.name}</div>
-              <div className="font-display text-xl gold-text">{fmtUsd(player.bestItem.price)}</div>
+              <div className="font-display text-xl accent-text">{fmtUsd(player.bestItem.price)}</div>
             </div>
           ) : (
             <div className="text-sm text-muted">Ещё не показан. Сыграйте первый баттл.</div>
@@ -61,7 +61,7 @@ export default function Profile() {
 
         <div className="flex items-baseline justify-between mb-4">
           <h2 className="text-xs uppercase tracking-[0.2em] text-muted">История матчей</h2>
-          <Link to="/lobby" className="text-sm text-gold hover:text-champagne transition-colors">В баттл →</Link>
+          <Link to="/lobby" className="text-sm text-accent hover:text-accent-soft transition-colors">В баттл →</Link>
         </div>
         <div className="panel divide-y divide-line">
           {player.history.length === 0 && (

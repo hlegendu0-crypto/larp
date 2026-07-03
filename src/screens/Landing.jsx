@@ -33,7 +33,7 @@ export default function Landing() {
             <OnlineCounter className="justify-center" />
           </div>
           <h1 className="fade-up mt-6 font-display text-5xl sm:text-7xl font-semibold leading-[1.05] tracking-tight" style={{ animationDelay: '0.08s' }}>
-            Твои вещи <span className="gold-text">говорят за тебя</span>
+            Твои вещи <span className="accent-text">говорят за тебя</span>
           </h1>
           <p className="fade-up mx-auto mt-6 max-w-xl text-muted text-lg" style={{ animationDelay: '0.16s' }}>
             Live 1v1 видео-баттлы. 60 секунд. AI оценивает всё, что ты покажешь.
@@ -56,7 +56,7 @@ export default function Landing() {
         <div className="grid sm:grid-cols-3 gap-4">
           {STEPS.map((s) => (
             <div key={s.n} className="panel p-7">
-              <div className="font-display gold-text text-lg">{s.n}</div>
+              <div className="font-display accent-text text-lg">{s.n}</div>
               <div className="mt-3 font-display text-2xl">{s.title}</div>
               <p className="mt-3 text-sm text-muted leading-relaxed">{s.text}</p>
             </div>
@@ -68,17 +68,17 @@ export default function Landing() {
       <section className="mx-auto max-w-3xl px-4 sm:px-6 py-16">
         <div className="flex items-baseline justify-between mb-6">
           <h2 className="text-xs uppercase tracking-[0.3em] text-muted">Лучшие игроки</h2>
-          <Link to="/leaderboard" className="text-sm text-gold hover:text-champagne transition-colors">
+          <Link to="/leaderboard" className="text-sm text-accent hover:text-accent-soft transition-colors">
             Весь лидерборд →
           </Link>
         </div>
         <div className="panel divide-y divide-line">
           {top5.map((p, i) => (
             <div key={p.nick} className="flex items-center gap-4 px-5 py-4">
-              <span className="font-display w-6 text-champagne/70">{i + 1}</span>
+              <span className="font-display w-6 text-accent-soft/70">{i + 1}</span>
               <span className="flex-1 font-semibold">{p.nick}</span>
               <RankBadge elo={p.elo} size="sm" />
-              <span className="font-display text-champagne w-16 text-right">{p.elo}</span>
+              <span className="font-display text-accent-soft w-16 text-right">{p.elo}</span>
             </div>
           ))}
         </div>

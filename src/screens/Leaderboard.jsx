@@ -33,7 +33,7 @@ export default function Leaderboard() {
                 disabled={key === 'season'}
                 title={key === 'season' ? 'Сезоны появятся позже' : undefined}
                 className={`rounded-full px-4 py-1.5 transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed ${
-                  period === key ? 'hairline text-champagne' : 'text-muted hover:text-cream'
+                  period === key ? 'hairline text-accent-soft' : 'text-muted hover:text-cream'
                 }`}
               >
                 {label}
@@ -55,16 +55,16 @@ export default function Leaderboard() {
               <div
                 key={r.nick}
                 className={`grid grid-cols-[2.5rem_1fr_auto_4rem_4rem] gap-3 items-center px-5 py-3.5 text-sm ${
-                  r.me ? 'bg-gold/5' : ''
+                  r.me ? 'bg-accent/5' : ''
                 }`}
               >
-                <span className={`font-display ${i < 3 ? 'gold-text font-semibold' : 'text-muted'}`}>{i + 1}</span>
+                <span className={`font-display ${i < 3 ? 'accent-text font-semibold' : 'text-muted'}`}>{i + 1}</span>
                 <span className="font-semibold truncate">
                   {r.nick}
-                  {r.me && <span className="ml-2 text-[10px] uppercase tracking-widest text-gold">вы</span>}
+                  {r.me && <span className="ml-2 text-[10px] uppercase tracking-widest text-accent">вы</span>}
                 </span>
                 <RankBadge elo={r.elo} size="sm" />
-                <span className="font-display text-champagne text-right">{r.elo}</span>
+                <span className="font-display text-accent-soft text-right">{r.elo}</span>
                 <span className="text-muted text-right">{winrate(r.wins, r.losses)}%</span>
               </div>
             ))}
@@ -74,11 +74,11 @@ export default function Leaderboard() {
         {/* Закреплённая строка своей позиции */}
         {player && myIndex >= 0 && (
           <div className="sticky bottom-4 mt-4">
-            <div className="panel border-gold/40 grid grid-cols-[2.5rem_1fr_auto_4rem_4rem] gap-3 items-center px-5 py-3.5 text-sm shadow-xl bg-panel">
-              <span className="font-display text-gold">{myIndex + 1}</span>
+            <div className="panel border-accent/40 grid grid-cols-[2.5rem_1fr_auto_4rem_4rem] gap-3 items-center px-5 py-3.5 text-sm shadow-xl bg-panel">
+              <span className="font-display text-accent">{myIndex + 1}</span>
               <span className="font-semibold truncate">{player.nick}</span>
               <RankBadge elo={player.elo} size="sm" />
-              <span className="font-display text-champagne text-right">{player.elo}</span>
+              <span className="font-display text-accent-soft text-right">{player.elo}</span>
               <span className="text-muted text-right">{winrate(player.wins, player.losses)}%</span>
             </div>
           </div>

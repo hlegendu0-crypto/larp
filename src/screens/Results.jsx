@@ -66,7 +66,7 @@ export default function Results() {
     <div>
       <div className="flex items-baseline justify-between mb-3">
         <div className="text-xs uppercase tracking-[0.2em] text-muted">{title}</div>
-        <div className={`font-display text-xl ${highlight ? 'text-champagne' : ''}`}>{fmtUsd(score)}</div>
+        <div className={`font-display text-xl ${highlight ? 'text-accent-soft' : ''}`}>{fmtUsd(score)}</div>
       </div>
       <div className="space-y-2">
         {items.length === 0 && <div className="text-sm text-muted">Ни одного айтема</div>}
@@ -83,19 +83,19 @@ export default function Results() {
         <div className="text-xs uppercase tracking-[0.35em] text-muted mb-3">
           {result.friendly ? 'Приватный матч' : result.technical ? 'Техническое поражение' : 'Итог баттла'}
         </div>
-        <h1 className={`font-display text-5xl sm:text-6xl font-semibold ${result.won ? 'gold-text' : ''}`}>
+        <h1 className={`font-display text-5xl sm:text-6xl font-semibold ${result.won ? 'accent-text' : ''}`}>
           {result.won ? 'Победа' : result.draw ? 'Ничья' : 'Поражение'}
         </h1>
 
         <div className="mt-8 flex items-center justify-center gap-8 sm:gap-14">
           <div className="text-right">
             <div className="text-sm text-muted">{player.nick}</div>
-            <div className={`font-display text-3xl ${result.won ? 'text-champagne' : ''}`}>{fmtUsd(result.myScore)}</div>
+            <div className={`font-display text-3xl ${result.won ? 'text-accent-soft' : ''}`}>{fmtUsd(result.myScore)}</div>
           </div>
           <div className="font-display text-muted text-xl">—</div>
           <div className="text-left">
             <div className="text-sm text-muted">{result.opponent.nick}</div>
-            <div className={`font-display text-3xl ${!result.won && !result.draw ? 'text-champagne' : ''}`}>
+            <div className={`font-display text-3xl ${!result.won && !result.draw ? 'text-accent-soft' : ''}`}>
               {fmtUsd(result.oppScore)}
             </div>
           </div>
@@ -108,7 +108,7 @@ export default function Results() {
             </span>
             <span className="text-muted text-sm">→ {newElo}</span>
             <RankBadge elo={newElo} size="sm" />
-            {rankedUp && <span className="text-xs gold-text font-semibold uppercase tracking-widest">Новый ранг!</span>}
+            {rankedUp && <span className="text-xs accent-text font-semibold uppercase tracking-widest">Новый ранг!</span>}
           </div>
         )}
 

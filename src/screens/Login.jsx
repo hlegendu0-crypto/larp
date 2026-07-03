@@ -35,7 +35,7 @@ export default function Login() {
               onChange={(e) => setNick(e.target.value)}
               maxLength={20}
               placeholder="Минимум 3 символа"
-              className="mt-2 w-full rounded-lg bg-graphite border border-line px-4 py-3 text-cream placeholder:text-muted/60 focus:outline-none focus:border-gold/60 transition-colors"
+              className="mt-2 w-full rounded-lg bg-graphite border border-line px-4 py-3 text-cream placeholder:text-muted/60 focus:outline-none focus:border-accent/60 transition-colors"
             />
           </label>
           <label className="flex items-start gap-3 text-sm text-muted cursor-pointer">
@@ -43,12 +43,12 @@ export default function Login() {
               type="checkbox"
               checked={ageOk}
               onChange={(e) => setAgeOk(e.target.checked)}
-              className="mt-1 accent-[#d4b46a]"
+              className="mt-1 accent-[#a78bfa]"
             />
             <span>
               Мне есть 18 лет, я принимаю{' '}
-              <a href="#/terms" className="text-gold hover:text-champagne">условия использования</a> и{' '}
-              <a href="#/privacy" className="text-gold hover:text-champagne">политику конфиденциальности</a>.
+              <a href="#/terms" className="text-accent hover:text-accent-soft">условия использования</a> и{' '}
+              <a href="#/privacy" className="text-accent hover:text-accent-soft">политику конфиденциальности</a>.
             </span>
           </label>
           <Button disabled={!valid} className="w-full">Войти</Button>

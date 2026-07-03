@@ -5,7 +5,7 @@ function Doc({ title, children }) {
     <PageShell>
       <article className="fade-up pt-4 max-w-2xl">
         <h1 className="font-display text-3xl mb-8">{title}</h1>
-        <div className="space-y-6 text-sm leading-relaxed text-cream/85 [&_h2]:font-display [&_h2]:text-xl [&_h2]:text-champagne [&_h2]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ul]:text-cream/75">
+        <div className="space-y-6 text-sm leading-relaxed text-cream/85 [&_h2]:font-display [&_h2]:text-xl [&_h2]:text-accent-soft [&_h2]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:space-y-1 [&_ul]:text-cream/75">
           {children}
         </div>
       </article>

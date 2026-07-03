@@ -50,7 +50,7 @@ export default function Lobby() {
             <OnlineCounter />
           </div>
           <div className="text-right">
-            <div className="font-display text-2xl text-champagne">{player.elo}</div>
+            <div className="font-display text-2xl text-accent-soft">{player.elo}</div>
             <RankBadge elo={player.elo} size="sm" />
           </div>
         </div>
@@ -58,7 +58,7 @@ export default function Lobby() {
         {mode === 'queue' ? (
           <div className="panel p-10 text-center">
             <div className="mx-auto w-20 h-20 rounded-full hairline flex items-center justify-center mb-6">
-              <div className="w-14 h-14 rounded-full border-2 border-gold/30 border-t-gold animate-spin" />
+              <div className="w-14 h-14 rounded-full border-2 border-accent/30 border-t-accent animate-spin" />
             </div>
             <div className="font-display text-2xl mb-2">Подбор соперника</div>
             <p className="text-sm text-muted">
@@ -75,10 +75,10 @@ export default function Lobby() {
           <div className="grid sm:grid-cols-2 gap-4">
             <button
               onClick={() => setMode('queue')}
-              className="panel p-8 text-left hover:border-gold/40 transition-colors cursor-pointer group"
+              className="panel p-8 text-left hover:border-accent/40 transition-colors cursor-pointer group"
             >
-              <div className="text-xs uppercase tracking-[0.25em] text-gold mb-3">Рейтинговый</div>
-              <div className="font-display text-2xl group-hover:text-champagne transition-colors">
+              <div className="text-xs uppercase tracking-[0.25em] text-accent mb-3">Рейтинговый</div>
+              <div className="font-display text-2xl group-hover:text-accent-soft transition-colors">
                 Быстрый матч
               </div>
               <p className="mt-3 text-sm text-muted leading-relaxed">
@@ -87,7 +87,7 @@ export default function Lobby() {
             </button>
 
             <div
-              className={`panel p-8 text-left transition-colors ${mode === 'friend' ? 'border-gold/40' : ''}`}
+              className={`panel p-8 text-left transition-colors ${mode === 'friend' ? 'border-accent/40' : ''}`}
             >
               <div className="text-xs uppercase tracking-[0.25em] text-muted mb-3">Приватный</div>
               <div className="font-display text-2xl">Вызов друга</div>

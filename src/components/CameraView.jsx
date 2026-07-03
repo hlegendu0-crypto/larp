@@ -80,8 +80,8 @@ export function FakeOpponentVideo({ className = '', label }) {
       const x = w * (0.5 + Math.sin(t * 1.7) * 0.25)
       const y = h * (0.45 + Math.cos(t * 1.1) * 0.15)
       const spot = ctx.createRadialGradient(x, y, 0, x, y, h * 0.55)
-      spot.addColorStop(0, 'rgba(212,180,106,0.10)')
-      spot.addColorStop(1, 'rgba(212,180,106,0)')
+      spot.addColorStop(0, 'rgba(167,139,250,0.10)')
+      spot.addColorStop(1, 'rgba(167,139,250,0)')
       ctx.fillStyle = spot
       ctx.fillRect(0, 0, w, h)
       // лёгкий шум
@@ -100,7 +100,7 @@ export function FakeOpponentVideo({ className = '', label }) {
       <canvas ref={canvasRef} width={640} height={360} className="w-full h-full object-cover" />
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="text-center">
-          <div className="mx-auto mb-3 w-16 h-16 rounded-full hairline flex items-center justify-center font-display text-2xl text-champagne/80">
+          <div className="mx-auto mb-3 w-16 h-16 rounded-full hairline flex items-center justify-center font-display text-2xl text-accent-soft/80">
             {label?.[0]?.toUpperCase() || '?'}
           </div>
           <div className="text-xs uppercase tracking-[0.25em] text-muted">live · симуляция</div>
