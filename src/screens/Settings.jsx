@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { usePlayer } from '../store.jsx'
 import { Button, PageShell } from '../components/ui.jsx'
+import { getAiConfig, setAiConfig, MODELS } from '../lib/vision.js'
 
 export default function Settings() {
   const { player, rename, logout } = usePlayer()
@@ -10,6 +11,8 @@ export default function Settings() {
   const [saved, setSaved] = useState(false)
   const [devices, setDevices] = useState({ cams: [], mics: [] })
   const [confirmDelete, setConfirmDelete] = useState(false)
+  const [ai, setAi] = useState(() => getAiConfig())
+  const [aiSaved, setAiSaved] = useState(false)
 
   useEffect(() => {
     navigator.mediaDevices
@@ -68,6 +71,49 @@ export default function Settings() {
           <Select label="Камера" items={devices.cams} />
           <Select label="Микрофон" items={devices.mics} />
           <p className="text-[11px] text-muted">Выбор устройства применяется на Camera Check.</p>
+        </div>
+
+        <div className="panel p-6 space-y-5 mb-5">
+          <div className="text-xs uppercase tracking-[0.2em] text-muted">AI-оценка (этап 2)</div>
+          <label className="block">
+            <span className="text-xs uppercase tracking-[0.2em] text-muted">Anthropic API key</span>
+            <input
+              type="password"
+              value={ai.apiKey}
+              onChange={(e) => setAi((a) => ({ ...a, apiKey: e.target.value }))}
+              placeholder="sk-ant-…"
+              autoComplete="off"
+              className="mt-2 w-full rounded-lg bg-graphite border border-line px-4 py-3 text-cream placeholder:text-muted/60 focus:outline-none focus:border-accent/60"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs uppercase tracking-[0.2em] text-muted">Модель</span>
+            <select
+              value={ai.model}
+              onChange={(e) => setAi((a) => ({ ...a, model: e.target.value }))}
+              className="mt-2 w-full rounded-lg bg-graphite border border-line px-4 py-3 text-cream focus:outline-none focus:border-accent/60"
+            >
+              {MODELS.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.label} — {m.hint}
+                </option>
+              ))}
+            </select>
+          </label>
+          <Button
+            className="!py-2 text-xs"
+            onClick={() => {
+              setAiConfig(ai)
+              setAiSaved(true)
+              setTimeout(() => setAiSaved(false), 2000)
+            }}
+          >
+            {aiSaved ? 'Сохранено' : 'Сохранить'}
+          </Button>
+          <p className="text-[11px] text-muted">
+            Ключ хранится только в этом браузере (localStorage) и уходит напрямую в Anthropic API.
+            Используется в режиме «Оцени мой флекс».
+          </p>
         </div>
 
         <div className="panel p-6 space-y-4 border-danger/30">

@@ -127,6 +127,25 @@ export default function Lobby() {
                 </>
               )}
             </div>
+
+            <button
+              onClick={() => navigate('/solo')}
+              className="panel p-8 text-left hover:border-accent/40 transition-colors cursor-pointer group sm:col-span-2"
+            >
+              <div className="flex items-center gap-3 mb-3">
+                <span className="text-xs uppercase tracking-[0.25em] text-accent">Соло · реальный AI</span>
+                <span className="text-[10px] uppercase tracking-widest hairline rounded-full px-2 py-0.5 text-accent-soft/80">
+                  этап 2
+                </span>
+              </div>
+              <div className="font-display text-2xl group-hover:text-accent-soft transition-colors">
+                Оцени мой флекс
+              </div>
+              <p className="mt-3 text-sm text-muted leading-relaxed">
+                Раунд без соперника: Claude vision распознаёт ваши вещи и оценивает их стоимость
+                вживую. Без рейтинга — чистая проверка флекса.
+              </p>
+            </button>
           </div>
         )}
       </div>
