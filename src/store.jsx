@@ -10,6 +10,8 @@ const freshPlayer = (nick) => ({
   losses: 0,
   history: [], // { opponent, myScore, oppScore, delta, won, technical, date }
   bestItem: null, // { name, price }
+  token: null, // этап 4: токен серверного аккаунта (null = гостевой режим)
+  email: null,
 })
 
 export function PlayerProvider({ children }) {
@@ -27,6 +29,20 @@ export function PlayerProvider({ children }) {
   }, [player])
 
   const login = (nick) => setPlayer(freshPlayer(nick.trim()))
+  // Этап 4: вход с серверным аккаунтом — статистика авторитетна на бэке
+  const loginServer = ({ profile, token }) =>
+    setPlayer({
+      ...freshPlayer(profile.nick),
+      elo: profile.elo,
+      wins: profile.wins,
+      losses: profile.losses,
+      email: profile.email,
+      token,
+    })
+  const syncProfile = (profile) =>
+    setPlayer((p) =>
+      p ? { ...p, nick: profile.nick, elo: profile.elo, wins: profile.wins, losses: profile.losses } : p,
+    )
   const logout = () => setPlayer(null)
   const rename = (nick) => setPlayer((p) => ({ ...p, nick: nick.trim() }))
 
@@ -39,7 +55,8 @@ export function PlayerProvider({ children }) {
           : p.bestItem
       return {
         ...p,
-        elo: Math.max(0, p.elo + r.delta),
+        // newElo приходит от сервера (этап 4) и авторитетнее локального расчёта
+        elo: r.newElo !== undefined && r.newElo !== null ? r.newElo : Math.max(0, p.elo + r.delta),
         wins: p.wins + (r.won ? 1 : 0),
         losses: p.losses + (r.won ? 0 : 1),
         history: [
@@ -60,7 +77,7 @@ export function PlayerProvider({ children }) {
   }
 
   return (
-    <PlayerContext.Provider value={{ player, login, logout, rename, applyResult }}>
+    <PlayerContext.Provider value={{ player, login, loginServer, syncProfile, logout, rename, applyResult }}>
       {children}
     </PlayerContext.Provider>
   )

@@ -1,18 +1,28 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { usePlayer } from '../store.jsx'
 import { PageShell, RankBadge } from '../components/ui.jsx'
 import { LEADERBOARD } from '../data/mock.js'
+import { apiLeaderboard } from '../lib/api.js'
 
 const winrate = (w, l) => (w + l ? Math.round((w / (w + l)) * 100) : 0)
 
 export default function Leaderboard() {
   const { player } = usePlayer()
   const [period, setPeriod] = useState('all') // сезоны — бэклог (ТЗ §6.7)
+  const [serverRows, setServerRows] = useState(null) // null = мок-фолбэк
 
-  const rows = [...LEADERBOARD]
+  // Этап 4: реальный глобальный топ с бэка; при недоступном сервере — мок этапа 1
+  useEffect(() => {
+    apiLeaderboard()
+      .then((data) => setServerRows(data.players))
+      .catch(() => setServerRows(null))
+  }, [])
+
+  const rows = serverRows ? [...serverRows] : [...LEADERBOARD]
   if (player) {
-    const mine = { nick: player.nick, elo: player.elo, wins: player.wins, losses: player.losses, me: true }
-    if (!rows.some((r) => r.nick === player.nick)) rows.push(mine)
+    const mineIdx = rows.findIndex((r) => r.nick === player.nick)
+    if (mineIdx >= 0) rows[mineIdx] = { ...rows[mineIdx], me: true }
+    else rows.push({ nick: player.nick, elo: player.elo, wins: player.wins, losses: player.losses, me: true })
   }
   rows.sort((a, b) => b.elo - a.elo)
   const myIndex = rows.findIndex((r) => r.me)
@@ -21,7 +31,12 @@ export default function Leaderboard() {
     <PageShell>
       <div className="fade-up pt-4">
         <div className="flex items-end justify-between mb-6">
-          <h1 className="font-display text-3xl">Лидерборд</h1>
+          <div>
+            <h1 className="font-display text-3xl">Лидерборд</h1>
+            {!serverRows && (
+              <p className="text-[11px] text-muted mt-1">Демо-данные — сервер недоступен</p>
+            )}
+          </div>
           <div className="flex gap-1 text-xs">
             {[
               ['all', 'За всё время'],

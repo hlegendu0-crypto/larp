@@ -13,6 +13,7 @@ export default function Lobby() {
   const [waitSec, setWaitSec] = useState(0)
   const [copied, setCopied] = useState(false)
   const [demo, setDemo] = useState(false) // сервер недоступен — режим симуляции
+  const [denied, setDenied] = useState(null) // отказ сервера (нет аккаунта / бан / лимит)
   const [inviteCode, setInviteCode] = useState(null)
   const socketRef = useRef(null)
 
@@ -31,15 +32,20 @@ export default function Lobby() {
     if (mode !== 'queue') return
     setWaitSec(0)
     setDemo(false)
+    setDenied(null)
     const tick = setInterval(() => setWaitSec((s) => s + 1), 1000)
     let demoTimer = null
     let cancelled = false
 
-    connectSignaling({ nick: player.nick, elo: player.elo })
+    connectSignaling({ nick: player.nick, elo: player.elo, token: player.token })
       .then((socket) => {
         if (cancelled) return socket.close()
         socketRef.current = socket
         socket.on('match_found', (msg) => goLive(socket, msg))
+        socket.on('queue_denied', (msg) => {
+          setDenied(msg.message)
+          setMode(null)
+        })
         socket.onClose(() => !cancelled && setMode(null))
         socket.send('find_match')
       })
@@ -71,7 +77,7 @@ export default function Lobby() {
     setInviteCode(null)
     setDemo(false)
     try {
-      const socket = await connectSignaling({ nick: player.nick, elo: player.elo })
+      const socket = await connectSignaling({ nick: player.nick, elo: player.elo, token: player.token })
       socketRef.current = socket
       socket.on('room_created', (msg) => setInviteCode(msg.code))
       socket.on('match_found', (msg) => goLive(socket, msg))
@@ -109,6 +115,12 @@ export default function Lobby() {
             <RankBadge elo={player.elo} size="sm" />
           </div>
         </div>
+
+        {denied && (
+          <div className="panel border-danger/40 px-5 py-4 mb-4 text-sm text-danger card-in">
+            {denied}
+          </div>
+        )}
 
         {mode === 'queue' ? (
           <div className="panel p-10 text-center">

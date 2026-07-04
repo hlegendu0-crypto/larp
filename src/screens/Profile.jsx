@@ -1,11 +1,22 @@
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { usePlayer } from '../store.jsx'
 import { Button, PageShell, RankBadge } from '../components/ui.jsx'
 import { fmtUsd, nextRank } from '../lib/elo.js'
+import { apiMe } from '../lib/api.js'
 
 export default function Profile() {
-  const { player } = usePlayer()
+  const { player, syncProfile } = usePlayer()
   const battles = player.wins + player.losses
+
+  // Этап 4: у серверного аккаунта статистика авторитетна на бэке — синхронизируем
+  useEffect(() => {
+    if (!player.token) return
+    apiMe(player.token)
+      .then((data) => syncProfile(data.profile))
+      .catch(() => {})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   const winrate = battles ? Math.round((player.wins / battles) * 100) : 0
   const next = nextRank(player.elo)
 

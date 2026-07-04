@@ -98,6 +98,10 @@ export default function LiveBattle() {
               technical: payload.technical,
               surrendered: payload.outcome === 'loss' && payload.reason !== 'time',
               outcome: payload.outcome,
+              endReason: payload.reason,
+              // Этап 4: ELO считает сервер (только рейтинговые матчи аккаунтов)
+              eloDelta: payload.eloDelta,
+              newElo: payload.newElo,
             },
           })
           return f
@@ -127,6 +131,15 @@ export default function LiveBattle() {
         ...f,
       ])
     })
+
+    // Вердикт сервера по нашему айтему (этап 4): античит-база может обнулить повтор
+    socket.on('item_ack', (msg) => {
+      setFeed((f) =>
+        f.map((e) => (e.id === `me-${msg.id}` ? { ...e, flag: msg.flag, reason: msg.reason } : e)),
+      )
+    })
+
+    socket.on('report_ack', () => showToast('Жалоба отправлена модерации'))
 
     socket.on('battle_end', (msg) => finishToResults(msg))
 
@@ -208,7 +221,8 @@ export default function LiveBattle() {
           try {
             const result = await analyzeFrame(frame)
             if (result.nsfw) {
-              socketRef.current?.send('surrender')
+              // §7.5: NSFW → сервер завершает бой тех. поражением и банит до модерации
+              socketRef.current?.send('nsfw')
               return
             }
             for (const it of result.items || []) {
@@ -233,11 +247,19 @@ export default function LiveBattle() {
                 price: Math.round(it.est_price_usd),
                 confidence: Math.round(it.confidence * 100) / 100,
               }
+              const localId = ++idRef.current
               setFeed((f) => [
-                { kind: 'item', player: 'me', id: `me-${++idRef.current}`, flag, reason, item },
+                { kind: 'item', player: 'me', id: `me-${localId}`, flag, reason, item },
                 ...f,
               ])
-              socketRef.current?.send('item', { item, flag, reason })
+              // id — для серверного вердикта (item_ack), phash — для античит-базы §7.4
+              socketRef.current?.send('item', {
+                id: localId,
+                item,
+                flag,
+                reason,
+                phash: frame.hash?.toString(16),
+              })
             }
           } catch (e) {
             showToast(e.message)
@@ -393,7 +415,7 @@ export default function LiveBattle() {
             <Button variant="danger" className="!px-4 !py-2 text-xs" onClick={() => socketRef.current?.send('surrender')}>
               Сдаться
             </Button>
-            <Button variant="ghost" className="!px-4 !py-2 text-xs" onClick={() => showToast('Жалоба отправлена модерации')}>
+            <Button variant="ghost" className="!px-4 !py-2 text-xs" onClick={() => socketRef.current?.send('report')}>
               Репорт
             </Button>
           </div>

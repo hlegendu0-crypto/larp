@@ -3,7 +3,7 @@ import { SIGNALING_URL } from './config.js'
 // Клиент сигналинг-сервера (этап 3). Тонкая обёртка над WebSocket:
 // send(type, payload), on(type, handler), onClose(handler).
 
-export function connectSignaling({ nick, elo, timeoutMs = 2500 } = {}) {
+export function connectSignaling({ nick, elo, token, timeoutMs = 2500 } = {}) {
   return new Promise((resolve, reject) => {
     let ws
     try {
@@ -40,7 +40,7 @@ export function connectSignaling({ nick, elo, timeoutMs = 2500 } = {}) {
 
     ws.onopen = () => {
       clearTimeout(timer)
-      sock.send('hello', { nick, elo })
+      sock.send('hello', { nick, elo, token })
       resolve(sock)
     }
     ws.onerror = () => {

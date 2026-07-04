@@ -5,3 +5,6 @@ export const MAX_FRAMES_PER_ROUND = 8 // лимит AI-кадров на рау�
 export const SIGNALING_URL =
   import.meta.env.VITE_SIGNALING_URL ||
   `${location.protocol === 'https:' ? 'wss' : 'ws'}://${location.hostname}:8787`
+
+// HTTP API живёт на том же порту, что и сигналинг
+export const API_URL = SIGNALING_URL.replace(/^ws/, 'http')

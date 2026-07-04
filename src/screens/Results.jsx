@@ -16,11 +16,15 @@ export default function Results() {
     // Live-матч (этап 3): исход определяет сервер, включая технические победы
     const won = state.outcome ? state.outcome === 'win' : state.surrendered ? false : state.myScore > state.oppScore
     const draw = state.outcome ? state.outcome === 'draw' : !state.surrendered && state.myScore === state.oppScore
-    const delta = state.friendly
-      ? 0
-      : eloDelta(player.elo, state.opponent.elo, draw ? 0.5 : won ? 1 : 0, {
-          technical: state.technical,
-        })
+    // Этап 4: для рейтинговых live-матчей дельту считает сервер
+    const delta =
+      state.eloDelta !== undefined && state.eloDelta !== null
+        ? state.eloDelta
+        : state.friendly
+          ? 0
+          : eloDelta(player.elo, state.opponent.elo, draw ? 0.5 : won ? 1 : 0, {
+              technical: state.technical,
+            })
     const bestMine = state.myItems
       .filter((e) => !e.flag && !e.voided)
       .sort((a, b) => b.item.price - a.item.price)[0]
@@ -39,6 +43,7 @@ export default function Results() {
       myScore: result.myScore,
       oppScore: result.oppScore,
       delta: result.delta,
+      newElo: result.newElo, // серверное значение, если матч рейтинговый (этап 4)
       won: result.won,
       technical: result.technical,
       myBestItem: result.myBestItem,
@@ -48,7 +53,12 @@ export default function Results() {
 
   if (!result) return <Navigate to="/lobby" replace />
 
-  const newElo = result.friendly ? oldElo.current : Math.max(0, oldElo.current + result.delta)
+  const newElo =
+    result.newElo !== undefined && result.newElo !== null
+      ? result.newElo
+      : result.friendly
+        ? oldElo.current
+        : Math.max(0, oldElo.current + result.delta)
   const newRank = rankFor(newElo).name
   const rankedUp = newRank !== oldRank.current && result.delta > 0
 
